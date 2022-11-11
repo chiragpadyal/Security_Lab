@@ -1,0 +1,39 @@
+Installation of SQUID:
+sudo apt-get install squid
+Check status of SQUID :
+cd /etc/squid
+service squid status
+Change Firefox
+proxy settings
+Backing up the
+Squid configuration file:
+cp squid.conf squid.conf.copy
+Open Squid file and make changes:
+sudo gedit squid.conf
+Change in visible proxy name:
+visible_hostname Name_Proxy_Server
+Restricting Access By Client
+acl resclient src 192.168.0.104
+http_access allow localnet !resclient
+To restrict access to Squid by domain
+acl CONNECT method CONNECT
+acl resclient src 10.211.55.4
+acl forbidden dstdomain .facebook.com
+http_access deny forbidden
+http_access allow localnet !resclient
+To allow access to those sites during a certain time of the day (10:00 until 11:00 am) only on
+Monday (M), Wednesday (W), and Friday (F).
+acl workingHour time MWTFA 10:00-20:00
+http_access allow forbidden workingHour
+http_access deny forbidden
+Restricting access by user authentication
+auth_param basic program /usr/lib/squid3/basic_ncsa_auth /etc/squid/passwd
+auth_param basic credentialsttl 30 minutes
+auth_param basic casesensitive on
+auth_param basic realm Squid proxy-caching web server for APSIT
+acl ncsa proxy_auth REQUIRED
+http_access allow ncsa
+Run below command to create passwd file
+sudo chmod 777 /etc/squid/passwd
+htpasswd -c /etc/squid/passwd apsit
+NOTE: RESTART SQUID AFTER EACH FILE SAVE - service squid restart
