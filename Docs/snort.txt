@@ -1,0 +1,32 @@
+To study Intrusion Detection system SNORT and its log analysis.
+Install Snort
+sudo apt-get install snort
+Editing snort configuration files
+Type:
+sudo vi +45 /etc/snort/snort.conf
+ipvar HOME_NET 192.168.43.130/24 {NOTE: put your ipaddr here. Remove number
+after last point and make it 0. Then put /24 at end}
+sudo vi +104 /etc/snort/snort.conf
+Following the line at 104, make sure your paths look like this.
+var RULE_PATH /etc/snort/rules
+var SO_RULE_PATH /etc/snort/so_rules
+var PREPROC_RULE_PATH /etc/snort/preproc_rules
+var WHITE_LIST_PATH /etc/snort/rules/iplists
+var BLACK_LIST_PATH /etc/snort/rules/iplists
+sudo vi +545 /etc/snort/snort.conf
+UN-comment the 545th line and make it look like this
+include $RULE_PATH/local.rules
+sudo gedit /etc/snort/rules/local.rules
+alert icmp any any -> {your ip with subnet} any (msg:”ICMP test”; sid:1000001; rev:1;)
+Run Snort test conf. and local rules
+sudo snort -T -c /etc/snort/snort.conf ^C
+sudo snort -T -c /etc/snort/rules/local.rules
+Now, let’s start Snort in IDS mode and tell it to display alerts to the console:
+sudo snort -A console -c /etc/snort/snort.conf
+Now, ping from other computer and wait for some time. Snort is in listening mode. TaKe ss
+Go to /var/log/snort to see alerts
+cd /var/log/snort
+ls
+cat alert
+Read log file by tcp dump
+sudo tcpdump -r snort.log
