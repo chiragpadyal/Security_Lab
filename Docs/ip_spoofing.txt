@@ -1,0 +1,37 @@
+To study IP spoofing and ARP spoofing over a local area network.
+Download 3 tar files of Netkit from https://www.netkit.org/
+Unzip them
+tar -xjSf netkit-2.8.tar.bz2
+tar -xjSf netkit-filesystem-i386-F5.2.tar.bz2
+tar -xjSf netkit-kernel-i386-K2.8.tar.bz2
+Type in terminal
+gedit ~/.bashrc
+add following lines at the end of bash file.
+export NETKIT_HOME=/home/apsit/Downloads/netkit
+export PATH=$PATH:$NETKIT_HOME/bin
+export MANPATH=:$NETKIT_HOME/man
+export PATH=$NETKIT_HOME/bin:$PATH
+Now, go to netkit folder and check configuration
+cd netkit
+./check_configuration.sh
+Now, type
+vstart pc1 --eth0=A
+vstart pc2 --eth0=A
+vstart pc3 --eth0=A
+PC1: ifconfig eth0 192.168.1.11
+PC2: ifconfig eth0 192.168.1.12
+PC3: ifconfig eth0 192.168.1.13
+In PC1: ping 192.168.1.13
+Stop then write,
+Iptables -t nat -A POSTROUTING -p icmp -j SNAT --to-source 192.168.1.12
+Now, in PC2: tcpdump -i any
+In PC1: ping 192.168.1.13
+Install arpwatch
+ sudo apt install arpwatch
+check status
+ service arpwatch status
+do ifconfig to check ip and mac addr
+ sudo ifconfig enp4s0 hw ether <mac addr>
+Run
+ sudo tail -f /var/log/syslog
+ping your ip
