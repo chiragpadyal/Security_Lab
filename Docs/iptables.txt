@@ -1,0 +1,40 @@
+To	study	installation	and	configuration	of	Linux	Kernel	firewall	iptables.	
+Making	default	policy	of	INPUT	and	OUTPUT	Chain	as	DROP	:
+sudo	iptables	-A	INPUT	-j	DROP
+sudo	iptables	-L	-n	-v	–line-numbers
+sudo	iptables	-A	INPUT	-j	DROP
+sudo	iptables	-L	-n	-v	–line-numbers
+Flushing	out	all	the	rules:
+sudo	iptables	-F
+sudo iptables	-L	-n	-v	–line-numbers
+Allowing	the	ports:
+sudo	iptables	-A	INPUT	-p	tcp	--dport	22	-j	ACCEPT
+sudo	iptables	-A	INPUT	-p	tcp	--dport	80	-j	ACCEPT
+sudo	iptables	-A	INPUT	-p	tcp	--dport	443	-j	ACCEPT
+sudo	iptables	-L	-n	-v	–line-numbers
+Deleting	the rule:
+sudo	iptables	-D	INPUT	1
+sudo	iptables	-L	-n	-v	–line-numbers
+
+List current rules
+sudo iptables -L
+Allow Established and Related Incoming Connections
+sudo iptables -A INPUT -m conntrack --ctstate ESTABLISHED,RELATED -j ACCEPT
+Allow Established Outgoing Connections
+sudo iptables -A OUTPUT -m conntrack --ctstate ESTABLISHED -j ACCEPT
+Allow All Incoming and Outgoing SSH
+iptables -A INPUT -p tcp --dport 22 -m conntrack --ctstate NEW,ESTABLISHED -j ACCEPT
+iptables -A OUTPUT -p tcp --sport 22 -m conntrack --ctstate ESTABLISHED -j ACCEPT
+Allow outgoing SSH to Specific IP address or subnet
+sudo iptables -A INPUT -p tcp -s 15.15.15.0/24 --dport 22 -m conntrack --ctstate
+NEW,ESTABLISHED -j ACCEPT
+sudo iptables -A OUTPUT -p tcp --sport 22 -m conntrack --ctstate ESTABLISHED -j ACCEPT
+Allow Incoming Rsync from Specific IP Address or Subnet
+iptables -A INPUT -p tcp -s 15.15.15.0/24 --dport 873 -m conntrack --ctstate
+NEW,ESTABLISHED -j ACCEPT
+iptables -A OUTPUT -p tcp --sport 873 -m conntrack –ctstate ESTABLISHED -j ACCEPT
+Allow All Incoming HTTP and HTTPS
+iptables -A INPUT -p tcp -m multiport --dports 80,443 -m conntrack --ctstate
+NEW,ESTABLISHED -j ACCEPT
+iptables -A OUTPUT -p tcp -m multiport --dports 80,443 -m conntrack --ctstate ESTABLISHED
+-j ACCEPT
